@@ -63,7 +63,7 @@ describe Board do
   end
 
   describe '#row_match?' do
-    context 'when there is not a horizontal four of a kind match' do
+    context 'when there are no horizontal four of a kind matches' do
       before do
         board.instance_variable_set(:@rows, [
           [nil, nil, nil, nil],
@@ -94,8 +94,8 @@ describe Board do
     end
   end
 
-  describe 'column_match?' do
-    context 'when there is not a vertical four of a kind match' do
+  describe '#column_match?' do
+    context 'when there are no vertical four of a kind matches' do
       before do
         board.instance_variable_set(:@rows, [
           [:X, nil, nil, nil],
@@ -125,4 +125,86 @@ describe Board do
       end
     end
   end
+
+  describe '#right_diagonal_match?' do
+    context 'when there is not a right diagonal match' do
+      it 'returns false' do
+        expect(board).not_to be_right_diagonal_match
+      end
+    end
+
+    context 'when there is a right diagonal match' do
+      before do
+        board.instance_variable_set(:@rows, [
+          [:X, nil, nil, nil],
+          [nil, :X, nil, nil],
+          [nil, nil, :X, nil],
+          [nil, nil, nil, :X]
+        ])
+      end
+
+      it 'returns true' do
+        expect(board).to be_right_diagonal_match
+      end
+    end
+  end
+
+  describe '#left_diagonal_match?' do
+    context 'when there is not a left diagonal match' do
+      it 'returns false' do
+        expect(board).not_to be_left_diagonal_match
+      end
+    end
+
+    context 'when there is a left diagonal match' do
+      before do
+        board.instance_variable_set(:@rows, [
+          [nil, nil, nil, :X],
+          [nil, nil, :X, nil],
+          [nil, :X, nil, nil],
+          [:X, nil, nil, nil]
+        ])
+      end
+
+      it 'returns true' do
+        expect(board).to be_left_diagonal_match
+      end
+    end
+  end
+
+  describe '#diagonal_match?' do
+    context 'when there are no diagonal matches' do
+      before do
+        allow(board).to receive(:right_diagonal_match?).and_return(false)
+        allow(board).to receive(:left_diagonal_match?).and_return(false)
+      end
+
+      it 'returns false' do
+        expect(board).not_to be_diagonal_match
+      end
+    end
+
+    context 'when there is a diagonal match going downward-left' do
+      before do
+        allow(board).to receive(:right_diagonal_match?).and_return(false)
+        allow(board).to receive(:left_diagonal_match?).and_return(true)
+      end
+
+      it 'returns true' do
+        expect(board).to be_diagonal_match
+      end
+    end
+
+    context 'when there is a diagonal match going downward-right' do
+      before do
+        allow(board).to receive(:right_diagonal_match?).and_return(true)
+        allow(board).to receive(:left_diagonal_match?).and_return(false)
+      end
+
+      it 'returns true' do
+        expect(board).to be_diagonal_match
+      end
+    end
+  end
+
 end

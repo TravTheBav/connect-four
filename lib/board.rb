@@ -67,4 +67,45 @@ class Board
     end
     false
   end
+
+  def diagonal_match?
+    right_diagonal_match? || left_diagonal_match?
+  end
+
+  def right_diagonal_match?
+    rows.each_with_index do |row, r_idx|
+      break if r_idx > rows.length - 4
+
+      row.each_with_index do |value, c_idx|
+        break if c_idx > row.length - 4
+
+        unless value.nil?
+          values = []
+          4.times { |i| values << rows[r_idx + i][c_idx + i] }
+          return true if values.all? { |ele| ele == value }
+        end
+      end
+    end
+    false
+  end
+
+  def left_diagonal_match?
+    reversed = rows.map(&:reverse)
+
+    reversed.each_with_index do |row, r_idx|
+      break if r_idx > reversed.length - 4
+
+      row.each_with_index do |value, c_idx|
+        break if c_idx > row.length - 4
+
+        unless value.nil?
+          values = []
+          4.times { |i| values << reversed[r_idx + i][c_idx + i] }
+          return true if values.all? { |ele| ele == value }
+        end
+      end
+    end
+    false
+  end
+
 end

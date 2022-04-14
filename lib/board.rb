@@ -39,6 +39,32 @@ class Board
 
       row -= 1
     end
-    self[[row, col]] = piece      
+    self[[row, col]] = piece
+  end
+
+  def row_match?
+    rows.each do |row|
+      row.each_with_index do |value, idx|
+        break if idx > row.length - 4
+
+        unless value.nil?
+          return true if row[idx..idx + 3].all? { |ele| ele == value }
+        end
+      end
+    end
+    false
+  end
+
+  def column_match?
+    rows.transpose.each do |col|
+      col.each_with_index do |value, idx|
+        break if idx > col.length - 4
+
+        unless value.nil?
+          return true if col[idx..idx + 3].all? { |ele| ele == value }
+        end
+      end
+    end
+    false
   end
 end

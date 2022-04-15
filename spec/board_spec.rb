@@ -5,6 +5,69 @@ require_relative '../lib/board'
 describe Board do
   subject(:board) { described_class.new }
 
+  describe '#column_full?' do
+    context 'when a column is empty' do
+      it 'returns false' do
+        result = board.column_full?(0)
+        expect(result).to be false
+      end
+    end
+
+    context 'when a column is half full' do
+      before do
+        board.instance_variable_set(:@rows, [
+          [nil, nil, nil],
+          [nil, :X, nil],
+          [nil, :X, nil]
+        ])
+      end
+
+      it 'returns false' do
+        result = board.column_full?(1)
+        expect(result).to be false
+      end
+    end
+
+    context 'when a column is full' do
+      before do
+        board.instance_variable_set(:@rows, [
+          [nil, :X, nil],
+          [nil, :X, nil],
+          [nil, :X, nil]
+        ])
+      end
+
+      it 'returns true' do
+        result = board.column_full?(1)
+        expect(result).to be true
+      end
+    end
+  end
+
+  describe '#empty_space?' do
+    context 'when passed in an empty position' do
+      it 'returns true' do
+        result = board.empty_space?([0,0])
+        expect(result).to be true
+      end
+    end
+
+    context 'when passed in a filled position' do
+      before do
+        board.instance_variable_set(:@rows, [
+          [nil, :X, nil],
+          [nil, :X, nil],
+          [nil, :X, nil]
+        ])
+      end
+
+      it 'returns false' do
+        result = board.empty_space?([0, 1])
+        expect(result).to be false
+      end
+    end
+  end
+
   describe '#place_piece' do
     context 'when the column is empty' do
       before do

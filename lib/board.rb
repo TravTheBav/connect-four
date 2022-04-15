@@ -32,11 +32,20 @@ class Board
     @rows[row][col] = value
   end
 
-  def place_piece(piece, col)
-    row = rows.length - 1 # starts at the 'bottom' of the board
-    until self[[row, col]].nil?
-      return 'This column is full' if row == -1
+  def column_full?(col_idx)
+    pos = [0, col_idx]
+    self[pos].nil? ? false : true
+  end
 
+  def empty_space?(pos)
+    self[pos].nil?
+  end
+
+  def place_piece(piece, col)
+    return 'This column is full' if column_full?(col)
+
+    row = rows.length - 1 # starts at the 'bottom' of the board
+    until empty_space?([row, col])
       row -= 1
     end
     self[[row, col]] = piece

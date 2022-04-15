@@ -123,4 +123,14 @@ class Board
     false
   end
 
+  def full?
+    i = 0
+    while valid_column_idx?(i)
+      return false unless column_full?(i)
+
+      i += 1
+    end
+    true
+  end
+
 end

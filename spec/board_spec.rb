@@ -293,4 +293,34 @@ describe Board do
     end
   end
 
+  describe '#full?' do
+    context 'when the board is not full' do
+      before do
+        board.instance_variable_set(:@rows, [
+          [:X, :X, nil],
+          [:X, :X, :X],
+          [:X, :X, :X]
+        ])
+      end
+
+      it 'returns false' do
+        expect(board).not_to be_full
+      end
+    end
+
+    context 'when the board is full' do
+      before do
+        board.instance_variable_set(:@rows, [
+          [:X, :X, :X],
+          [:X, :X, :X],
+          [:X, :X, :X]
+        ])
+      end
+
+      it 'returns true' do
+        expect(board).to be_full
+      end
+    end
+  end
+
 end

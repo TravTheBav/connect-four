@@ -15,7 +15,7 @@ class Board
         if circle.nil?
           print '⬤'.colorize(:white) + ' '
         else
-          print circle + ' '
+          print circle.to_s + ' '
         end
       end
       puts

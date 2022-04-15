@@ -68,6 +68,29 @@ describe Board do
     end
   end
 
+  describe '#valid_column_idx?' do
+    context 'when given a negative index' do
+      it 'returns false' do
+        result = board.valid_column_idx?(-1)
+        expect(result).to be false
+      end
+    end
+
+    context 'when given an index greater than the rightmost column' do
+      it 'returns false' do
+        result = board.valid_column_idx?(8)
+        expect(result).to be false
+      end
+    end
+
+    context 'when given an index within the board boundaries' do
+      it 'returns true' do
+        result = board.valid_column_idx?(4)
+        expect(result).to be true
+      end
+    end
+  end
+
   describe '#place_piece' do
     context 'when the column is empty' do
       before do
@@ -120,7 +143,7 @@ describe Board do
 
       it 'notifies that column is full' do
         error_msg = board.place_piece(:X, 1)
-        expect(error_msg).to eq('This column is full')
+        expect(error_msg).to eq('Error: that column is full')
       end
     end
   end

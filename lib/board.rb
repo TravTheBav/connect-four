@@ -41,8 +41,14 @@ class Board
     self[pos].nil?
   end
 
+  def valid_column_idx?(idx)
+    last_idx = rows[0].length - 1
+    (idx >= 0) && (idx <= last_idx)
+  end
+
   def place_piece(piece, col)
-    return 'This column is full' if column_full?(col)
+    return 'Error: column index out of range' if valid_column_idx?(col) == false
+    return 'Error: that column is full' if column_full?(col)
 
     row = rows.length - 1 # starts at the 'bottom' of the board
     until empty_space?([row, col])

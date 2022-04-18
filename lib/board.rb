@@ -47,7 +47,6 @@ class Board
   end
 
   def place_piece(piece, col)
-    return 'Error: column index out of range' if valid_column_idx?(col) == false
     return 'Error: that column is full' if column_full?(col)
 
     row = rows.length - 1 # starts at the 'bottom' of the board

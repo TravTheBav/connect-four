@@ -4,17 +4,12 @@ require_relative 'player'
 require_relative 'piece'
 
 class Game
-  attr_reader :board, :player_1, :player_2
+  attr_reader :board, :players
 
   def initialize
     @board = Board.new
-    @player_1 = Player.new(:red)
-    @player_2 = Player.new(:yellow)
-  end
-
-  def fetch_player_names
-    player_1.fetch_name
-    player_2.fetch_name
+    @players = [Player.new(:red), Player.new(:yellow)]
+    @current_player = players[0]
   end
 
   def game_over?
@@ -25,5 +20,14 @@ class Game
     else
       false
     end
+  end
+
+  def play
+    puts 'Welcome to Connect-4'
+    until game_over?
+      board.render
+      column_idx = current_player.fetch_column_choice
+
+
   end
 end

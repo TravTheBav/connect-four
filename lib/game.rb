@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 require_relative 'board'
 require_relative 'player'
-require_relative 'piece'
 
 class Game
   attr_reader :board, :players
@@ -25,24 +24,8 @@ class Game
 
   def play
     puts 'Welcome to Connect-4'
-    until game_over?
-      board.render
-      column_idx = current_player.fetch_column_choice
-      while board.column_full?(column_idx)
-        column_idx = current_player.fetch_column_choice
-      end
-      board.place_piece(current_player.color, column_idx)
-      switch_player
-      system('clear')
-    end
-
-    board.render
-
-    if winner?
-      puts "#{last_player.color} player wins"
-    else
-      puts 'No winner'
-    end
+    player_turn until game_over?
+    print_end_message
   end
 
   def current_player
@@ -55,5 +38,25 @@ class Game
 
   def switch_player
     @players.reverse!
+  end
+
+  def player_turn
+    board.render
+    column_idx = current_player.fetch_column_choice
+    while board.column_full?(column_idx)
+      column_idx = current_player.fetch_column_choice
+    end
+    board.place_piece(current_player.color, column_idx)
+    switch_player
+    system('clear')
+  end
+
+  def print_end_message
+    board.render
+    if winner?
+      puts "#{last_player.color} player wins"
+    else
+      puts 'No winner'
+    end
   end
 end

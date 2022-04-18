@@ -36,6 +36,8 @@ class Game
       system('clear')
     end
 
+    board.render
+
     if winner?
       puts "#{last_player.color} player wins"
     else

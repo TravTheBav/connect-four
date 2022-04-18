@@ -11,6 +11,8 @@ class Board
   end
 
   def render
+    7.times { |i| print "#{i} " }
+    puts
     @rows.each do |row|
       row.each do |circle|
         if circle.nil?

@@ -4,6 +4,7 @@ require_relative '../lib/board'
 
 describe Board do
   subject(:board) { described_class.new }
+  let(:red_piece) { double('red-piece') }
 
   describe '#column_full?' do
     context 'when a column is empty' do
@@ -102,13 +103,8 @@ describe Board do
       end
 
       it 'piece goes to the bottom of the column' do
-        expected_outcome = [
-          [nil, nil, nil],
-          [nil, nil, nil],
-          [:X, nil, nil]
-        ]
-        board.place_piece(:X, 0)
-        expect(board.rows).to eq(expected_outcome)
+        board.place_piece(:red, 0)
+        expect(board[[2, 0]]).to be_a(Piece)
       end
     end
 
@@ -116,34 +112,14 @@ describe Board do
       before do
         board.instance_variable_set(:@rows, [
           [nil, nil, nil],
-          [nil, :X, nil],
-          [nil, :X, nil]
+          [nil, red_piece, nil],
+          [nil, red_piece, nil]
         ])
       end
 
       it 'piece goes to the next empty space in the column' do
-        expected_outcome = [
-          [nil, :X, nil],
-          [nil, :X, nil],
-          [nil, :X, nil]
-        ]
-        board.place_piece(:X, 1)
-        expect(board.rows).to eq(expected_outcome)
-      end
-    end
-
-    context 'when the column is full' do
-      before do
-        board.instance_variable_set(:@rows, [
-          [nil, :X, nil],
-          [nil, :X, nil],
-          [nil, :X, nil]
-        ])
-      end
-
-      it 'notifies that column is full' do
-        error_msg = board.place_piece(:X, 1)
-        expect(error_msg).to eq('Error: that column is full')
+        board.place_piece(:red, 1)
+        expect(board[[0, 1]]).to be_a(Piece)
       end
     end
   end
@@ -154,9 +130,10 @@ describe Board do
         board.instance_variable_set(:@rows, [
           [nil, nil, nil, nil],
           [nil, nil, nil, nil],
-          [:X, :X, :X, nil],
+          [red_piece, red_piece, red_piece, nil],
           [nil, nil, nil, nil],
         ])
+        allow(red_piece).to receive(:color).and_return(:red)
       end
 
       it 'returns false' do
@@ -169,9 +146,10 @@ describe Board do
         board.instance_variable_set(:@rows, [
           [nil, nil, nil, nil],
           [nil, nil, nil, nil],
-          [:X, :X, :X, :X],
+          [red_piece, red_piece, red_piece, red_piece],
           [nil, nil, nil, nil],
         ])
+        allow(red_piece).to receive(:color).and_return(:red)
       end
 
       it 'returns true' do
@@ -184,11 +162,12 @@ describe Board do
     context 'when there are no vertical four of a kind matches' do
       before do
         board.instance_variable_set(:@rows, [
-          [:X, nil, nil, nil],
-          [:X, nil, nil, nil],
-          [:X, nil, nil, nil],
+          [red_piece, nil, nil, nil],
+          [red_piece, nil, nil, nil],
+          [red_piece, nil, nil, nil],
           [nil, nil, nil, nil],
         ])
+        allow(red_piece).to receive(:color).and_return(:red)
       end
 
       it 'returns false' do
@@ -199,11 +178,12 @@ describe Board do
     context 'when there is a vertical match' do
       before do
         board.instance_variable_set(:@rows, [
-          [nil, nil, :X, nil],
-          [nil, nil, :X, nil],
-          [nil, nil, :X, nil],
-          [nil, nil, :X, nil]
+          [nil, nil, red_piece, nil],
+          [nil, nil, red_piece, nil],
+          [nil, nil, red_piece, nil],
+          [nil, nil, red_piece, nil]
         ])
+        allow(red_piece).to receive(:color).and_return(:red)
       end
 
       it 'returns true' do
@@ -222,11 +202,12 @@ describe Board do
     context 'when there is a right diagonal match' do
       before do
         board.instance_variable_set(:@rows, [
-          [:X, nil, nil, nil],
-          [nil, :X, nil, nil],
-          [nil, nil, :X, nil],
-          [nil, nil, nil, :X]
+          [red_piece, nil, nil, nil],
+          [nil, red_piece, nil, nil],
+          [nil, nil, red_piece, nil],
+          [nil, nil, nil, red_piece]
         ])
+        allow(red_piece).to receive(:color).and_return(:red)
       end
 
       it 'returns true' do
@@ -245,11 +226,12 @@ describe Board do
     context 'when there is a left diagonal match' do
       before do
         board.instance_variable_set(:@rows, [
-          [nil, nil, nil, :X],
-          [nil, nil, :X, nil],
-          [nil, :X, nil, nil],
-          [:X, nil, nil, nil]
+          [nil, nil, nil, red_piece],
+          [nil, nil, red_piece, nil],
+          [nil, red_piece, nil, nil],
+          [red_piece, nil, nil, nil]
         ])
+        allow(red_piece).to receive(:color).and_return(:red)
       end
 
       it 'returns true' do

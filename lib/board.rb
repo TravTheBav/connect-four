@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'colorize'
+require_relative 'piece'
 
 class Board
   attr_accessor :rows
@@ -46,23 +47,22 @@ class Board
     (idx >= 0) && (idx <= last_idx)
   end
 
-  def place_piece(piece, col)
-    return 'Error: that column is full' if column_full?(col)
-
+  def place_piece(color, col)
     row = rows.length - 1 # starts at the 'bottom' of the board
     until empty_space?([row, col])
       row -= 1
     end
-    self[[row, col]] = piece
+    self[[row, col]] = Piece.new(color)
   end
 
   def row_match?
     rows.each do |row|
-      row.each_with_index do |value, idx|
+      row.each_with_index do |circle, idx|
         break if idx > row.length - 4
 
-        unless value.nil?
-          return true if row[idx..idx + 3].all? { |ele| ele == value }
+        unless circle.nil?
+          break if row[idx..idx + 3].any?(&:nil?)
+          return true if row[idx..idx + 3].all? { |ele| ele.color == circle.color }
         end
       end
     end
@@ -71,11 +71,12 @@ class Board
 
   def column_match?
     rows.transpose.each do |col|
-      col.each_with_index do |value, idx|
+      col.each_with_index do |circle, idx|
         break if idx > col.length - 4
 
-        unless value.nil?
-          return true if col[idx..idx + 3].all? { |ele| ele == value }
+        unless circle.nil?
+          break if col[idx..idx + 3].any?(&:nil?)
+          return true if col[idx..idx + 3].all? { |ele| ele.color == circle.color }
         end
       end
     end
@@ -90,13 +91,14 @@ class Board
     rows.each_with_index do |row, r_idx|
       break if r_idx > rows.length - 4
 
-      row.each_with_index do |value, c_idx|
+      row.each_with_index do |circle, c_idx|
         break if c_idx > row.length - 4
 
-        unless value.nil?
-          values = []
-          4.times { |i| values << rows[r_idx + i][c_idx + i] }
-          return true if values.all? { |ele| ele == value }
+        unless circle.nil?
+          circles = []
+          4.times { |i| circles << rows[r_idx + i][c_idx + i] }
+          break if circles.any?(&:nil?)
+          return true if circles.all? { |ele| ele.color == circle.color }
         end
       end
     end
@@ -109,13 +111,14 @@ class Board
     reversed.each_with_index do |row, r_idx|
       break if r_idx > reversed.length - 4
 
-      row.each_with_index do |value, c_idx|
+      row.each_with_index do |circle, c_idx|
         break if c_idx > row.length - 4
 
-        unless value.nil?
-          values = []
-          4.times { |i| values << reversed[r_idx + i][c_idx + i] }
-          return true if values.all? { |ele| ele == value }
+        unless circle.nil?
+          circles = []
+          4.times { |i| circles << reversed[r_idx + i][c_idx + i] }
+          break if circles.any?(&:nil?)
+          return true if circles.all? { |ele| ele.color == circle.color }
         end
       end
     end

@@ -10,9 +10,7 @@ describe Game do
 
     context 'when no win conditions are met' do
       before do
-        allow(board).to receive(:row_match?).and_return(false)
-        allow(board).to receive(:column_match?).and_return(false)
-        allow(board).to receive(:diagonal_match?).and_return(false)
+        allow(connect_four).to receive(:winner?).and_return(false)
         allow(board).to receive(:full?).and_return(false)
       end
 
@@ -24,9 +22,7 @@ describe Game do
 
     context 'when one win condition is met' do
       before do
-        allow(board).to receive(:row_match?).and_return(false)
-        allow(board).to receive(:column_match?).and_return(false)
-        allow(board).to receive(:diagonal_match?).and_return(true)
+        allow(connect_four).to receive(:winner?).and_return(true)
         allow(board).to receive(:full?).and_return(false)
       end
 
@@ -38,15 +34,43 @@ describe Game do
 
     context 'when the board is filled and there is no winner' do
       before do
-        allow(board).to receive(:row_match?).and_return(false)
-        allow(board).to receive(:column_match?).and_return(false)
-        allow(board).to receive(:diagonal_match?).and_return(false)
+        allow(connect_four).to receive(:winner?).and_return(false)
         allow(board).to receive(:full?).and_return(true)
       end
 
       it 'returns true' do
         connect_four.instance_variable_set(:@board, board)
         expect(connect_four).to be_game_over
+      end
+    end
+  end
+
+  describe '#winner?' do
+    let(:board) { instance_double('game-board') }
+
+    context 'when a row, column, or diagonal has a four of a kind match' do
+      before do
+        allow(board).to receive(:row_match?).and_return(false)
+        allow(board).to receive(:column_match?).and_return(false)
+        allow(board).to receive(:diagonal_match?).and_return(true)
+      end
+
+      it 'returns true' do
+        connect_four.instance_variable_set(:@board, board)
+        expect(connect_four).to be_winner
+      end
+    end
+
+    context 'when there are no four of a kind matches' do
+      before do
+        allow(board).to receive(:row_match?).and_return(false)
+        allow(board).to receive(:column_match?).and_return(false)
+        allow(board).to receive(:diagonal_match?).and_return(false)
+      end
+
+      it 'returns false' do
+        connect_four.instance_variable_set(:@board, board)
+        expect(connect_four).not_to be_winner
       end
     end
   end

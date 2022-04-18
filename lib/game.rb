@@ -9,17 +9,18 @@ class Game
   def initialize
     @board = Board.new
     @players = [Player.new(:red), Player.new(:yellow)]
-    @current_player = players[0]
   end
 
   def game_over?
-    if board.row_match? || board.column_match? || board.diagonal_match?
-      true
-    elsif board.full?
+    if winner? || board.full?
       true
     else
       false
     end
+  end
+
+  def winner?
+    board.row_match? || board.column_match? || board.diagonal_match?
   end
 
   def play
@@ -27,7 +28,30 @@ class Game
     until game_over?
       board.render
       column_idx = current_player.fetch_column_choice
+      while board.column_full?(column_idx)
+        column_idx = current_player.fetch_column_choice
+      end
+      board.place_piece(current_player.color, column_idx)
+      switch_player
+      system('clear')
+    end
 
+    if winner?
+      puts "#{last_player.color} player wins"
+    else
+      puts 'No winner'
+    end
+  end
 
+  def current_player
+    @players[0]
+  end
+
+  def last_player
+    @players[1]
+  end
+
+  def switch_player
+    @players.reverse!
   end
 end
